@@ -1,15 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Manager;
+using System.Security.Cryptography;
 
 public class PlayerManager : MonoBehaviour
 {
+    public int currentMode;
+    public int prevMode;
+    public List<Camera> cameras;
+
     public Controller playerController;
     public CharacterController characterController;
 
-    public Camera mainCam;
+    public Camera currentCam;
     public RawImage interactionIndicator;
     private Vector3 movement;
     private float turnSmoothTime = 0.1f;
@@ -24,7 +30,11 @@ public class PlayerManager : MonoBehaviour
     private void Loaded()
     {
         interactionIndicator = FindObjectOfType<RawImage>();
-        mainCam = Camera.main;
+        foreach (Camera cam in FindObjectsOfType<Camera>())
+        {
+            cameras.Add(cam);
+        }
+        UpdateCamera(0);
         Cursor.lockState = CursorLockMode.Locked;
     }
 
@@ -37,6 +47,12 @@ public class PlayerManager : MonoBehaviour
         {
             Interact();
         }
+
+        if(Input.GetButtonDown("Switch Camera"))
+        {
+            currentMode = (currentMode + 1) % cameras.Count;
+            UpdateCamera(currentMode);
+        }
     }
 
     private void MovePlayer()
@@ -47,7 +63,7 @@ public class PlayerManager : MonoBehaviour
 
         if (movement.magnitude >= 0.1f)
         {
-            float targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg + mainCam.transform.eulerAngles.y;
+            float targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg + currentCam.transform.eulerAngles.y;
             float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
             characterController.transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
@@ -69,11 +85,22 @@ public class PlayerManager : MonoBehaviour
         Debug.Log("Interacted with object");
     }
 
+    private void UpdateCamera(int nextMode)
+    {
+        prevMode = currentMode;
+        currentMode = nextMode;
+
+        cameras[prevMode].enabled = false;
+        cameras[currentMode].enabled = true;
+
+        Debug.Log("Switched camera to: " + cameras[currentMode].name);
+    }
+
     private bool CanInteract()
     {
         RaycastHit hit;
         // Does the ray intersect any objects excluding the player layer
-        if (Physics.Raycast(transform.position, mainCam.transform.forward, out hit))
+        if (Physics.Raycast(transform.position, currentCam.transform.forward, out hit))
         {
             if (hit.transform.tag == "Interactable")
             {

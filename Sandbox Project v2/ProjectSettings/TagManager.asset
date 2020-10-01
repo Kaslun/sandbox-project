@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Spawnpoint
   - Interactable
+  - Camera
   layers:
   - Default
   - TransparentFX
