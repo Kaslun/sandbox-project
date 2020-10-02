@@ -6,20 +6,21 @@ using Manager;
 
 public class EnemyAI : MonoBehaviour
 {
-    public Controller playerController;
     public AIController aiController;
-    public NavMeshAgent agent;
-    public StateMachine stateMachine;
-    public GameManager gameManager;
-    public GameObject playerObject;
+
+    private NavMeshAgent agent;
+    private StateMachine stateMachine;
+    private GameManager gameManager;
+    private GameObject playerObject;
+
+    [HideInInspector]
     public List<Transform> path;
 
     private void Start()
     {
-        stateMachine = FindObjectOfType<StateMachine>() as StateMachine;
-        gameManager = FindObjectOfType<GameManager>() as GameManager;
+        stateMachine = FindObjectOfType<StateMachine>();
+        gameManager = FindObjectOfType<GameManager>();
         playerObject = GameObject.FindGameObjectWithTag("Player");
-        playerController = playerObject.GetComponent<PlayerManager>().playerController;
         agent = GetComponent<NavMeshAgent>();
 
         agent.enabled = false;
@@ -50,7 +51,6 @@ public class EnemyAI : MonoBehaviour
 
             if(!stateMachine.isSearching)
             {
-                Debug.Log("Setting Idle");
                 stateMachine.UpdateState(StateMachine.State.idle, aiController, agent, null, this);
             }
         }

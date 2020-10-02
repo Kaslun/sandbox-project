@@ -23,17 +23,6 @@ namespace Player {
             inst = Instantiate(player);
             inst.name = player.name;
             inst.transform.position = transform.position;
-
-            SpawnCamera();
-        }
-
-        private void SpawnCamera()
-        {
-            CinemachineFreeLook cineCam = instCam.GetComponent<CinemachineFreeLook>();
-            cineCam.Follow = inst.transform;
-            cineCam.LookAt = inst.transform;
-
-            instCam.transform.SetParent(GameObject.FindGameObjectWithTag("GameController").transform);
         }
     }
 }
