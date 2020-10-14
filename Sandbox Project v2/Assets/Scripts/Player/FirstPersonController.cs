@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using Manager;
 using System.Threading;
+using Cinemachine;
 
 namespace Player
 {
     public class FirstPersonController : MonoBehaviour
     {
-        public Transform fpsCamPos;
+        public Transform camPos;
 
         private PlayerController playerController;
         private Vector3 movement;
@@ -20,28 +21,29 @@ namespace Player
         private float rotY;
 
         public bool isEnabled;
+        private bool isLoaded = false;
 
         private void Start()
         {
             EventManager.StartListening("Loaded", Loaded);
-            EventManager.StartListening("SwitchMode", SwitchController);
+            EventManager.StartListening("SwitchMode", Enable);
         }
 
         private void Loaded()
         {
             characterController = GetComponent<CharacterController>();
             playerController = GetComponent<PlayerController>();
-            
-            CameraManager camManager = playerController.cameraManager;
-            cam = camManager.cameras[0];
-  
+
+            cam = Camera.main;
+
+            isLoaded = true;
         }
 
         private void Update()
         {
-            cam.transform.position = fpsCamPos.position;
-            cam.enabled = isEnabled;
-            if (isEnabled)
+            if (!isLoaded || !isEnabled) return;
+
+            if (cam.enabled)
             {
                 MovePlayer();
                 LookRotation();
@@ -75,15 +77,17 @@ namespace Player
             float mouseY = Input.GetAxisRaw("Mouse Y") * sensitivity * Time.deltaTime;
 
             rotX -= mouseY;
+            rotY += mouseX;
 
             rotX = Mathf.Clamp(rotX, -90f, 90f);
+            rotY = Mathf.Clamp(rotY, -60f, 60f);
 
             transform.Rotate(Vector3.up * mouseX);
-            cam.transform.rotation = Quaternion.Euler(rotX, transform.rotation.eulerAngles.y, 0f);
+            cam.transform.rotation = Quaternion.Euler(rotX, transform.rotation.eulerAngles.y, rotY);
 
         }
 
-        private void SwitchController()
+        private void Enable()
         {
             isEnabled = !isEnabled;
         }

@@ -21,5 +21,5 @@ MonoBehaviour:
   maxPatrolPoints: 3
   maxViewDistance: 20
   maxSearchTime: 3
-  pauseBetweenPoints: 0.1
-  playerController: {fileID: 0}
+  pauseBetweenPoints: 0.2
+  playerController: {fileID: 11400000, guid: 5e775f22ed5432d4bafb4da35df3861f, type: 2}

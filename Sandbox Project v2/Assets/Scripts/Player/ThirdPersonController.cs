@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine;
 using Manager;
+using Cinemachine;
 
 namespace Player
 {
@@ -10,17 +11,21 @@ namespace Player
     {
         private PlayerController playerController;
         private CharacterController characterController;
+
         private Camera cam;
+
         private Vector3 movement;
         private float turnSmoothTime = 0.1f;
         private float turnSmoothVelocity;
 
+
         public bool isEnabled;
+        private bool isLoaded = false;
 
         private void Start()
         {
             EventManager.StartListening("Loaded", Loaded);
-            EventManager.StartListening("SwitchMode", SwitchController);
+            EventManager.StartListening("SwitchMode", Enable);
         }
 
         private void Loaded()
@@ -28,14 +33,21 @@ namespace Player
             characterController = GetComponent<CharacterController>();
             playerController = GetComponent<PlayerController>();
 
-            CameraManager camManager = playerController.cameraManager;
-            cam = camManager.cameras[1];
+            cam = Camera.main;
+
+            isLoaded = true;
         }
 
         private void Update()
         {
-            cam.enabled = isEnabled;
-            if (isEnabled) MovePlayer();
+            if (!isLoaded || !isEnabled)
+                return;
+
+            if (cam.enabled)
+            {
+                MovePlayer();
+                LookRotation();
+            }
         }
 
         private void MovePlayer()
@@ -63,7 +75,29 @@ namespace Player
             }
         }
 
-        private void SwitchController()
+
+        public float sensitivity = 100f;
+        private float rotX;
+        private float rotY;
+
+        private void LookRotation()
+        {
+            float mouseX = Input.GetAxisRaw("Mouse X") * sensitivity * Time.deltaTime;
+            float mouseY = Input.GetAxisRaw("Mouse Y") * sensitivity * Time.deltaTime;
+
+            rotX -= mouseY;
+            rotY += mouseX;
+
+            rotX = Mathf.Clamp(rotX, -90f, 90f);
+            rotY = Mathf.Clamp(rotY, -60f, 60f);
+
+            transform.Rotate(Vector3.up * mouseX);
+            //cam.transform.rotation = Quaternion.Euler(rotX, transform.rotation.eulerAngles.y, 0f);
+            cam.transform.rotation = Quaternion.Euler(rotX, transform.rotation.eulerAngles.y, rotY);
+
+        }
+
+        private void Enable()
         {
             isEnabled = !isEnabled;
         }

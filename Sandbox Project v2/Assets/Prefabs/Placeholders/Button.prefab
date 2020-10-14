@@ -102,6 +102,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8521307064981251422}
+  - component: {fileID: 4102613061643988517}
   m_Layer: 0
   m_Name: Button
   m_TagString: Interactable
@@ -125,6 +126,20 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4102613061643988517
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8521307064981251409}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 42ceb0c36ff2ae64aa37a79e3dc5bdb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  interactableObject: {fileID: 11400000, guid: 43bcf4991ffa8d740b2752419b173d1b, type: 2}
+  itemPool: []
 --- !u!1 &8521307065002251609
 GameObject:
   m_ObjectHideFlags: 0
