@@ -3,13 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Manager;
 using Cinemachine;
-using Player;
 
 public class PlayerCamera : MonoBehaviour
 {
-    public Camera playerCam;
-    public Camera currentCam;
-
     public List<CinemachineVirtualCamera> vCams;
 
     private int prevState;

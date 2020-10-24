@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerController
   m_EditorClassIdentifier: 
   name: Player
-  prefab: {fileID: 349674957762937302, guid: 9d795e7cbcbacb84091a453c291d6ee9, type: 3}
+  prefab: {fileID: 919132149155446097, guid: 402afb078398a9a478d57eb951516632, type: 3}
   health: 5
   damage: 5
   speed: 6

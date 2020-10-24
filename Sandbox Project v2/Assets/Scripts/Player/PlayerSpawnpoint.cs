@@ -16,7 +16,7 @@ namespace Player {
 
         public void SpawnPlayer()
         {
-            if (player == null) return;
+            //if (player == null) return;
             GameObject inst = Instantiate(player);
             inst.name = player.name;
             inst.transform.position = transform.position;

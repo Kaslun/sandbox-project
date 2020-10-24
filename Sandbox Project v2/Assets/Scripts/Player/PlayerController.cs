@@ -3,20 +3,31 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Manager;
+using System.Security.Cryptography;
 
 namespace Player
 {
     public class PlayerController : MonoBehaviour
     {
+
+        public enum State
+        {
+            idle,
+            chase,
+            search,
+            attack
+        }
+
         public Controller controller;
         private CharacterController characterController;
+        public AnimController animController;
 
         private Camera cam;
-
         private RaycastHit hit;
 
         public float jumpForce;
         private Vector3 movement;
+        private Animator anim;
 
         public float sensitivity = 100f;
         private float turnSmoothTime = 0.1f;
@@ -35,6 +46,8 @@ namespace Player
         private void Loaded()
         {
             cam = Camera.main;
+            anim = GetComponent<Animator>();
+            animController = FindObjectOfType<AnimController>();
             characterController = GetComponent<CharacterController>();
             isLoaded = true;
         }
@@ -44,12 +57,19 @@ namespace Player
         {
             if (!isLoaded) return;
 
+            if (movement.magnitude >= 0.1f) return;
+            //animController.UpdateState(AnimController.AnimState.walk, anim);
+            else
+            //animController.UpdateState(AnimController.AnimState.idle, anim);
             if (firstPerson)
+            {
+                LookRotation();
+
                 MoveFPS();
+            }
             else
                 MoveTPS();
 
-            LookRotation();
 
             if (Input.GetButtonDown("Jump") && characterController.isGrounded)
                 movement.y = jumpForce * Time.deltaTime;
@@ -71,9 +91,8 @@ namespace Player
 
             if (movement.magnitude >= 0.1f)
             {
+                
                 float targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
-                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-                characterController.transform.rotation = Quaternion.Euler(0f, angle, 0f);
 
                 Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
                 characterController.Move((moveDir + Physics.gravity) * controller.speed * Time.deltaTime);
@@ -91,6 +110,10 @@ namespace Player
 
             if (movement.magnitude >= 0.1f)
             {
+                float targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg + (cam.transform.rotation.eulerAngles.x * Time.deltaTime);
+                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
+                characterController.transform.rotation = Quaternion.Euler(0f, angle, 0f);
+
                 characterController.Move(movement * controller.speed * Time.deltaTime);
             }
             else
@@ -103,14 +126,13 @@ namespace Player
             float mouseY = Input.GetAxisRaw("Mouse Y") * sensitivity * Time.deltaTime;
 
             rotX -= mouseY;
-            rotY += mouseX;
-
             rotX = Mathf.Clamp(rotX, -90f, 90f);
-            rotY = Mathf.Clamp(rotY, -60f, 60f);
+            rotY += mouseX;
+            rotY = Mathf.Clamp(rotY, 90f, -90f);
 
             transform.Rotate(Vector3.up * mouseX);
             //cam.transform.rotation = Quaternion.Euler(rotX, transform.rotation.eulerAngles.y, 0f);
-            cam.transform.rotation = Quaternion.Euler(rotX, transform.rotation.eulerAngles.y, rotY);
+            cam.transform.rotation = Quaternion.Euler(rotX, transform.rotation.eulerAngles.y, 0f);
 
         }
 

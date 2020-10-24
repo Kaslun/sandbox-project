@@ -505,11 +505,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23191309f52d8244db0137838b26b2de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
-  controller: {fileID: 0}
-  agent: {fileID: 0}
-  stateMachine: {fileID: 0}
-  gameManager: {fileID: 0}
+  aiController: {fileID: 0}
+  path: []
 --- !u!1 &7881511759714884699
 GameObject:
   m_ObjectHideFlags: 0
