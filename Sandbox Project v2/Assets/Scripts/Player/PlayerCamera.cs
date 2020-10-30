@@ -9,7 +9,9 @@ public class PlayerCamera : MonoBehaviour
     public List<CinemachineVirtualCamera> vCams;
 
     private int prevState;
-    private int currentState;
+
+    [HideInInspector]
+    public int currentState;
 
     private void Start()
     {

@@ -4,38 +4,36 @@ using UnityEngine;
 using UnityEngine.UI;
 using Manager;
 using System.Security.Cryptography;
+using System.Threading;
 
 namespace Player
 {
     public class PlayerController : MonoBehaviour
     {
-
-        public enum State
-        {
-            idle,
-            chase,
-            search,
-            attack
-        }
-
         public Controller controller;
         private CharacterController characterController;
-        public AnimController animController;
+        private PlayerCamera playerCamera;
+        private GameManager gameManager;
 
-        private Camera cam;
+        public Transform lookTarget;
+        private Vector3 targetOrigin;
+
+        [SerializeField]
+        private List<Transform> intObjects;
+ 
+        private Transform currentCam;
         private RaycastHit hit;
 
         public float jumpForce;
+        public float cameraSensitivity = 5;
         private Vector3 movement;
-        private Animator anim;
+        private Vector3 moveDir;
 
+        public float rotSensitivity = 3;
         public float sensitivity = 100f;
-        private float turnSmoothTime = 0.1f;
-        private float turnSmoothVelocity;
-        private float rotX;
-        private float rotY;
+        private float targetAngle;
 
-        private bool firstPerson;
+        private bool firstPerson = true;
         private bool isLoaded = false;
 
         void Start()
@@ -45,34 +43,20 @@ namespace Player
 
         private void Loaded()
         {
-            cam = Camera.main;
-            anim = GetComponent<Animator>();
-            animController = FindObjectOfType<AnimController>();
+            playerCamera = GetComponent<PlayerCamera>();
+            gameManager = FindObjectOfType<GameManager>();
             characterController = GetComponent<CharacterController>();
+            targetOrigin = lookTarget.position;
             isLoaded = true;
         }
 
-        // Update is called once per frame
         void Update()
         {
             if (!isLoaded) return;
 
-            if (movement.magnitude >= 0.1f) return;
-            //animController.UpdateState(AnimController.AnimState.walk, anim);
-            else
-            //animController.UpdateState(AnimController.AnimState.idle, anim);
-            if (firstPerson)
-            {
-                LookRotation();
-
-                MoveFPS();
-            }
-            else
-                MoveTPS();
-
-
-            if (Input.GetButtonDown("Jump") && characterController.isGrounded)
-                movement.y = jumpForce * Time.deltaTime;
+            Move();
+            Rotate();
+            //LookAtObject();
 
             if (Input.GetButtonDown("Interact") && CanInteract())
                 Interact();
@@ -83,7 +67,7 @@ namespace Player
             }
         }
 
-        private void MoveFPS()
+        private void Move()
         {
             float moveX = Input.GetAxisRaw("Horizontal");
             float moveZ = Input.GetAxisRaw("Vertical");
@@ -91,49 +75,65 @@ namespace Player
 
             if (movement.magnitude >= 0.1f)
             {
-                
-                float targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg + cam.transform.eulerAngles.y;
+                targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg;
+                moveDir = Quaternion.Euler(0f, targetAngle, 0f) * currentCam.forward;
 
-                Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
                 characterController.Move((moveDir + Physics.gravity) * controller.speed * Time.deltaTime);
             }
-            else
-                characterController.Move(Physics.gravity);
         }
-
-        private void MoveTPS()
+        private void Rotate()
         {
-            float moveX = Input.GetAxisRaw("Horizontal");
-            float moveZ = Input.GetAxisRaw("Vertical");
+            currentCam = playerCamera.vCams[playerCamera.currentState].transform;
 
-            movement = ((transform.right * moveX) + (transform.forward * moveZ)) + Physics.gravity;
-
-            if (movement.magnitude >= 0.1f)
-            {
-                float targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg + (cam.transform.rotation.eulerAngles.x * Time.deltaTime);
-                float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-                characterController.transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-                characterController.Move(movement * controller.speed * Time.deltaTime);
-            }
-            else
-                characterController.Move(Physics.gravity * Time.deltaTime);
-        }
-
-        private void LookRotation()
-        {
             float mouseX = Input.GetAxisRaw("Mouse X") * sensitivity * Time.deltaTime;
             float mouseY = Input.GetAxisRaw("Mouse Y") * sensitivity * Time.deltaTime;
 
-            rotX -= mouseY;
-            rotX = Mathf.Clamp(rotX, -90f, 90f);
-            rotY += mouseX;
-            rotY = Mathf.Clamp(rotY, 90f, -90f);
+            Vector3 rotX = Vector3.up * mouseX;
+            Vector3 rotY = Vector3.right * -mouseY;
+            Quaternion playerTargetRot;
 
-            transform.Rotate(Vector3.up * mouseX);
-            //cam.transform.rotation = Quaternion.Euler(rotX, transform.rotation.eulerAngles.y, 0f);
-            cam.transform.rotation = Quaternion.Euler(rotX, transform.rotation.eulerAngles.y, 0f);
+            print("Movement = " + movement);
 
+            playerTargetRot = Quaternion.LookRotation(moveDir + transform.forward);
+
+            //Rotates the camera towards the direction of the player
+            if (!firstPerson)
+            {
+                if(currentCam.forward != transform.forward)
+                    currentCam.rotation = Quaternion.Lerp(currentCam.rotation, transform.rotation, Time.deltaTime * cameraSensitivity);
+
+                transform.rotation = Quaternion.Lerp(transform.rotation, playerTargetRot, Time.deltaTime * rotSensitivity);
+            }
+            else
+            {
+                //Rotates the camera up and down
+
+                Vector3 cameraTargetRot = rotY;
+                currentCam.Rotate(cameraTargetRot);
+                transform.rotation = Quaternion.Lerp(transform.rotation, playerTargetRot, Time.deltaTime * rotSensitivity);
+            }
+        }
+
+        void LookAtObject()
+        {
+            if(intObjects.Count <= 0) return;
+
+            float closestDistance = Mathf.Infinity;
+            Transform targetObj = null;
+
+            foreach (Transform obj in intObjects)
+            {
+                float distance = gameManager.DistanceToObject(obj, transform);
+
+                if (distance < closestDistance)
+                {
+                    closestDistance = distance;
+                    targetObj = obj;
+
+                    if(gameManager.IsObjectInView(targetObj, lookTarget))
+                        lookTarget.position = targetObj.position;
+                }
+            }
         }
 
         private void Interact()
@@ -141,18 +141,44 @@ namespace Player
             hit.transform.GetComponent<Interactable>().Interact();
         }
 
-        private bool CanInteract()
+        private bool CanInteract(Transform target = null)
         {
-            // Does the ray intersect any objects excluding the player layer
-            if (Physics.Raycast(transform.position, cam.transform.forward, out hit))
+            if(target == null)
             {
-                if (hit.transform.CompareTag("Interactable"))
+                // Does the ray intersect any objects excluding the player layer
+                if (Physics.Raycast(transform.position, currentCam.transform.forward, out hit))
                 {
-                    return true;
+                    if (hit.transform.CompareTag("Interactable"))
+                    {
+                        return true;
+                    }
+                    return false;
                 }
                 return false;
             }
+
+            else
+            {
+                if (target.CompareTag("Interactable"))
+                    return true;
+            }
+
             return false;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (!other.CompareTag("Interactable")) return;
+
+            if (!intObjects.Contains(other.transform))
+                intObjects.Add(other.transform);
+        }
+        private void OnTriggerExit(Collider other)
+        {
+            if (!other.CompareTag("Interactable")) return;
+
+            if (intObjects.Contains(other.transform))
+                intObjects.Remove(other.transform);
         }
     }
 }
