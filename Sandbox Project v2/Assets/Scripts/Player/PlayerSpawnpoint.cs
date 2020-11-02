@@ -9,17 +9,16 @@ namespace Player {
     {
         public GameObject player;
 
-        public void Start()
+        private void Start()
         {
-            SpawnPlayer();
+            SpawnPlayer(transform, player);
         }
 
-        public void SpawnPlayer()
+        public static void SpawnPlayer(Transform spawnPoint, GameObject player)
         {
-            //if (player == null) return;
             GameObject inst = Instantiate(player);
             inst.name = player.name;
-            inst.transform.position = transform.position;
+            inst.transform.position = spawnPoint.position;
         }
     }
 }

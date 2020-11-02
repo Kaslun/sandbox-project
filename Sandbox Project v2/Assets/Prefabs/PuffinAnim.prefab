@@ -58,6 +58,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_Children:
+  - {fileID: 4389708125599932683}
   - {fileID: 1251583491}
   - {fileID: 431672730}
   - {fileID: 2132765748}
@@ -115,7 +116,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 422854941}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &431672731
 MonoBehaviour:
@@ -255,7 +256,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 422854941}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1856917716
 GameObject:
@@ -301,7 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70b342d8ce5c2fd48b8fa3147d48d1d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0
   m_Effectors:
   - m_Transform: {fileID: 333057154}
     m_Style:
@@ -340,7 +341,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 422854941}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2132765749
 MonoBehaviour:
@@ -418,7 +419,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 52143293738123354}
-  m_LocalRotation: {x: -0, y: 7.707269e-10, z: -2.7710004e-10, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0.000409835, y: 0.13678955, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -754,6 +755,36 @@ Transform:
   m_Father: {fileID: 6129137481875285659}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3417654493161409111
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4389708125599932683}
+  m_Layer: 0
+  m_Name: TargetOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4389708125599932683
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3417654493161409111}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.3, z: 2.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 422854941}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3790769699678117274
 GameObject:
   m_ObjectHideFlags: 0
@@ -963,12 +994,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 11400000, guid: 5e775f22ed5432d4bafb4da35df3861f, type: 2}
+  debugMode: 1
   lookTarget: {fileID: 1251583491}
+  lookTargetOrigin: {fileID: 4389708125599932683}
+  head: {fileID: 5482307083668928081}
+  anim: {fileID: -6680989292787286214}
   intObjects: []
   jumpForce: 0
-  cameraSensitivity: 10
-  rotSensitivity: 7
-  sensitivity: 100
+  speedModifier: 1.5
+  xCamSensitivity: 5
+  yCamSensitivity: 5
+  camRotSensitivity: 10
+  rotSensitivity: 1
 --- !u!114 &6368496897897575174
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1249,8 +1286,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5505457119389669291}
-  m_LocalRotation: {x: -0.0000000119137455, y: -0.013346364, z: -6.178485e-10, w: 0.99991095}
-  m_LocalPosition: {x: 0.013345174, y: 0.11969709, z: -0.50123656}
+  m_LocalRotation: {x: -0, y: -0.016560374, z: -0, w: 0.9998629}
+  m_LocalPosition: {x: 0.0165581, y: 0.119697094, z: -0.5011404}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3577303088635660816}
@@ -1303,7 +1340,7 @@ GameObject:
   - component: {fileID: 3577303088635660816}
   - component: {fileID: 5285094963586962614}
   - component: {fileID: 8580728219388023772}
-  - component: {fileID: 5629192742310911722}
+  - component: {fileID: 1739801070140050179}
   m_Layer: 0
   m_Name: cm
   m_TagString: Untagged
@@ -1370,7 +1407,7 @@ MonoBehaviour:
     m_LegacyHeadingDefinition: -1
     m_LegacyVelocityFilterStrength: -1
   m_XAxis:
-    Value: -0.22685064
+    Value: 0
     m_MaxSpeed: 300
     m_AccelTime: 0.1
     m_DecelTime: 0.1
@@ -1390,7 +1427,7 @@ MonoBehaviour:
   m_LegacyHeightOffset: 3.4028235e+38
   m_LegacyHeadingBias: 3.4028235e+38
   m_HeadingIsSlave: 0
---- !u!114 &5629192742310911722
+--- !u!114 &1739801070140050179
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

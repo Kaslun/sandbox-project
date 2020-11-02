@@ -16,7 +16,6 @@ public class StateMachine : MonoBehaviour
 
     public State state;
     public State prevState;
-    public GameManager gameManager;
     private int currPoint = 0;
     public bool isSearching = false;
 
@@ -66,7 +65,7 @@ public class StateMachine : MonoBehaviour
 
     private void DoAttack(Controller controller, Transform target)
     {
-        gameManager.SendDamage(4, null);
+        GameManager.SendDamage(4, null);
     }
 
     public IEnumerator SearchTimer(float maxTime = 0)

@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using Player;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.Events;
 
 namespace Manager {
@@ -16,6 +18,7 @@ namespace Manager {
         void Start()
         {
             Cursor.lockState = CursorLockMode.Locked;
+
             StartCoroutine(LoadDelay(delay));
         }
 
@@ -31,23 +34,18 @@ namespace Manager {
             return animation.clip.length;
         }
 
-        public void SendDamage(int damage, Controller controller)
+        public static void SendDamage(int damage, Controller controller)
         {
             Debug.Log("Damaged object for: " + damage + " health");
         }
 
-        public void TakeDamage(int damage, Controller controller)
-        {
-            Debug.Log("Hit for: " + damage + " health");
-        }
-
-        public float DistanceToObject(Transform target, Transform origin)
+        public static float DistanceToObject(Transform target, Transform origin)
         {
             float distance = Vector3.Distance(target.position, origin.position);
             return distance;
         }
 
-        public bool IsObjectInView(Transform target, Transform origin)
+        public static bool IsObjectInView(Transform target, Transform origin)
         {
             RaycastHit hit;
 
