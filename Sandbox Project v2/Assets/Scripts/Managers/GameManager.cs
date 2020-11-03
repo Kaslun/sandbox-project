@@ -8,8 +8,9 @@ using UnityEngine.Events;
 namespace Manager {
     public class GameManager : MonoBehaviour
     {
-
-        private UnityAction levelLoaded;
+        
+        public bool debugMode;
+        public GameObject managerObj;
 
         [SerializeField]
         float delay = 1;
@@ -17,6 +18,7 @@ namespace Manager {
         // Start is called before the first frame update
         void Start()
         {
+            DontDestroyOnLoad(managerObj);
             Cursor.lockState = CursorLockMode.Locked;
 
             StartCoroutine(LoadDelay(delay));

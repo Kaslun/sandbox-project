@@ -98,11 +98,12 @@ namespace Player
 
             anim.SetFloat("Speed", movement.magnitude);
 
-
             if (movement.magnitude >= 0.1f)
             {
                 targetAngle = Mathf.Atan2(movement.x, movement.z) * Mathf.Rad2Deg;
+
                 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * currentCam.forward;
+
                 float speed = controller.speed;
 
                 if (Input.GetButton("Run"))
@@ -123,19 +124,20 @@ namespace Player
 
             Vector3 rotY = Vector3.up * mouseX;
             Vector3 rotX = Vector3.right * -mouseY;
-            currentCam.Rotate(rotX);
 
-            //Third person camera- and player rotation-controls
+            //First person camera- and player rotation-controls
             if (firstPerson)
             {
+                currentCam.Rotate(rotX);
                 transform.Rotate(rotY);
             }
 
-            //First person camera- and player rotation-controls
+            //Third person camera- and player rotation-controls
             else
             {
                 Quaternion playerTargetRot = Quaternion.LookRotation(moveDir + transform.forward);
                 transform.rotation = Quaternion.Lerp(transform.rotation, playerTargetRot, Time.deltaTime * rotSensitivity * 10);
+                currentCam.rotation = Quaternion.Lerp(currentCam.rotation, playerTargetRot, Time.deltaTime * rotSensitivity);
             }
         }
 

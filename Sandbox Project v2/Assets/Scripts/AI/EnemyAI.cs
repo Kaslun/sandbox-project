@@ -44,12 +44,12 @@ public class EnemyAI : MonoBehaviour
         if (!GameManager.IsObjectInView(playerObject.transform, transform))
         {
             //If last AI-action was chasing, search for player
-            if (stateMachine.prevState == StateMachine.State.chase)
+            if (StateMachine.prevState == StateMachine.State.chase)
             {
                 stateMachine.UpdateState(StateMachine.State.search, aiController, agent, playerObject.transform);
             }
 
-            if(!stateMachine.isSearching)
+            if(!StateMachine.isSearching)
             {
                 stateMachine.UpdateState(StateMachine.State.idle, aiController, agent, null, this);
             }
@@ -64,10 +64,10 @@ public class EnemyAI : MonoBehaviour
             //If target is out of reach, chase target
             else
             {
-                if (stateMachine.isSearching)
+                if (StateMachine.isSearching)
                 {
                     stateMachine.StopCoroutine(stateMachine.SearchTimer());
-                    stateMachine.isSearching = false;
+                    StateMachine.isSearching = false;
                 }
                 stateMachine.UpdateState(StateMachine.State.chase, aiController, agent, playerObject.transform);
             }
