@@ -7,29 +7,38 @@ namespace Manager
 {
     public class ColorFilterManager : MonoBehaviour
     {
-        public PostProcessVolume blueVolume;
-        public PostProcessVolume greenVolume;
         public PostProcessVolume volume;
-        public ColorGrading colorGrading;
 
-        public void Start()
+        private ColorGrading colorGrading;
+        private AnimationCurve cCurve;
+
+        private void Start()
         {
-            UpdateColorFilter();
-        }
-        public void UpdateColorFilter(SplineParameter newSpline)
-        {
+            volume = FindObjectOfType<PostProcessVolume>();
             colorGrading = volume.profile.GetSetting<ColorGrading>();
-
-            colorGrading.hueVsSatCurve.value = AddSplineCurves(colorGrading.hueVsSatCurve, newSpline);
+            cCurve = colorGrading.hueVsSatCurve.value.curve;
         }
 
-        public static SplineParameter AddSplineCurves(SplineParameter spline1, SplineParameter spline2)
+        public void UpdateColorFilter(AnimationCurve colorCurve)
         {
-            SplineParameter newCurve;
+            print("CCurve lenght: " + cCurve.length);
+            print("ColorCurve lenght: " + colorCurve.length);
 
-            newCurve = spline1.value + spline2.value;
+            //Moves previous keys to new positions, making a fluid and editable color filter
+            //CHEAT
+            while (cCurve.length > 0)
+            {
+                for (int i = 0; i < cCurve.length; i++)
+                {
+                    print("int: " + i);
+                    cCurve.RemoveKey(i);
+                }
+            }
 
-            return newCurve;
+            foreach(Keyframe k in colorCurve.keys)
+            {
+                cCurve.AddKey(k);
+            }
         }
     }
 }

@@ -1,30 +1,32 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using UnityEngine;
+using Manager;
+using UnityEditor;
 
 public class Interactable : MonoBehaviour
 {
     public InteractableObject interactableObject;
-    public GameObject[] itemPool;
+    public MonoBehaviour reciever;
 
-    public void Interact()
+    public AnimationCurve colorCurve;
+    public virtual void Interact()
     {
-        if (interactableObject.isBreakable)
-        {
-            SpawnItem();
-            Destroy(gameObject);
-        }
+        if(colorCurve.length > 0)
+            SendCurve();
 
         else
         {
-            Debug.Log(name + " is interacted with");
+            SendMessage();
         }
     }
-
-    private void SpawnItem()
+    private void SendCurve()
     {
-        GameObject go = Instantiate(itemPool[Random.Range(0, itemPool.Length)]);
-        go.transform.position = transform.position;
+        reciever.SendMessage("UpdateColorFilter", colorCurve);
+    }
+
+    private void SendMessage()
+    {
+        print("Sent message");
     }
 }

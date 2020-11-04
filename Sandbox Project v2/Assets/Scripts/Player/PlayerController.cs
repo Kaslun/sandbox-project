@@ -19,6 +19,9 @@ namespace Player
         private CheckpointManager checkpointManager;
         public bool debugMode;
 
+        public LayerMask player;
+        public LayerMask everything;
+
         [Header("IK Controls")]
         public Transform lookTarget;
         public Transform lookTargetOrigin;
@@ -67,6 +70,11 @@ namespace Player
         void Update()
         {
             if (!isLoaded) return;
+
+            if (firstPerson)
+                Camera.main.cullingMask = player;
+            else
+                Camera.main.cullingMask = everything;
 
             Move();
             Rotate();
@@ -179,16 +187,20 @@ namespace Player
         private void Interact(Transform target = null)
         {
             RaycastHit hit;
+
             if(target == null)
             {
                 // Does the ray intersect any objects excluding the player layer
                 if (Physics.Raycast(head.position, currentCam.transform.forward, out hit))
                 {
+                    if (hit.transform.CompareTag("Breakable"))
+                    {
+                        intObjects.Remove(hit.transform);
+                        hit.transform.GetComponent<Breakable>().Interact();
+                    }
+
                     if (hit.transform.CompareTag("Interactable"))
                     {
-                        if (hit.transform.GetComponent<Interactable>().interactableObject.isBreakable)
-                            intObjects.Remove(hit.transform);
-
                         hit.transform.GetComponent<Interactable>().Interact();
                     }
                 }
@@ -198,9 +210,9 @@ namespace Player
             {
                 if (target.CompareTag("Interactable"))
                 {
-                    if (target.GetComponent<Interactable>().interactableObject.isBreakable)
+                    if (target.GetComponent<Breakable>().interactableObject.isBreakable)
                         intObjects.Remove(target);
-                    target.GetComponent<Interactable>().Interact();
+                    target.GetComponent<Breakable>().Interact();
                 }
             }
         }

@@ -7,6 +7,7 @@ TagManager:
   - Spawnpoint
   - Interactable
   - Checkpoint
+  - Breakable
   layers:
   - Default
   - TransparentFX
@@ -17,7 +18,7 @@ TagManager:
   - 
   - 
   - Post-process
-  - 
+  - Player
   - 
   - 
   - 
