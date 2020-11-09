@@ -12,8 +12,6 @@ namespace Manager
         public VolumeProfile profile;
         private ColorCurves colorGrading;
         private ColorCurves tmp;
-        public VolumeComponent vComp;
-        public TextureCurve textCurve;
 
         private void Start()
         {
