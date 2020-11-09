@@ -3,16 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using Manager;
 using UnityEditor;
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 
 public class Interactable : MonoBehaviour
 {
     public InteractableObject interactableObject;
     public MonoBehaviour reciever;
 
-    public AnimationCurve colorCurve;
+    [Header("Color Properties")]
+    public AnimationCurve animCurve;
     public virtual void Interact()
     {
-        if(colorCurve.length > 0)
+        ColorFilterManager c = reciever as ColorFilterManager;
+        if(c != null)
             SendCurve();
 
         else
@@ -22,7 +26,7 @@ public class Interactable : MonoBehaviour
     }
     private void SendCurve()
     {
-        reciever.SendMessage("UpdateColorFilter", colorCurve);
+        reciever.SendMessage("UpdateColorFilter", animCurve);
     }
 
     private void SendMessage()
