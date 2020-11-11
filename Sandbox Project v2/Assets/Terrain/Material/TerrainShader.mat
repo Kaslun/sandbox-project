@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: TerrainShader
+  m_Shader: {fileID: -6465566751694194690, guid: 8ba50ee89e736f44eb46c8700ce304da,
+    type: 3}
+  m_ShaderKeywords: 
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - Texture2D_11E6BB3D:
+        m_Texture: {fileID: 2800000, guid: 6bcc65b7c6e3a0b448d7801bfc56842f, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_B377655C:
+        m_Texture: {fileID: 2800000, guid: 0cc0777f7d4a3444380eb084d74396b5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_CF12412A:
+        m_Texture: {fileID: 2800000, guid: f7dd726c93b8f17418ea3be3f6768909, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_CF638B4B:
+        m_Texture: {fileID: 2800000, guid: 6372587cede8c1a4394a5add7557f80b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - Texture2D_E7E65F07:
+        m_Texture: {fileID: 2800000, guid: fcd3993703e7d804bb735613d2a5189d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - Vector1_1136BF3B: 25
+    - Vector1_3DD8A2F9: 7
+    - Vector1_5841A5F4: 7.1
+    - Vector1_5F8040ED: 0
+    - Vector1_685AAA2A: 1
+    - Vector1_99F7E93C: 1
+    - Vector1_EC346CFA: 75
+    m_Colors:
+    - Color_447FF8C9: {r: 0.2830189, g: 0.2830189, b: 0.2830189, a: 0}
+    - Color_570B640A: {r: 0.6205055, g: 0.68635035, b: 0.7830189, a: 0}
+    - Color_5FFFEC3: {r: 0.4245283, g: 0.319099, b: 0.2723389, a: 0}
+    - Color_A5818DB8: {r: 0.31887203, g: 0.4433962, b: 0.29280883, a: 0}
+    - Color_D66197AE: {r: 0.6037736, g: 0.5693328, b: 0.4556782, a: 0}
